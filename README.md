@@ -8,6 +8,8 @@ your browser.
 And — importantly — **Home Assistant and the physical 3-way wall buttons keep working at
 the same time.**
 
+![Brink Renovent Diagram](Brink.png)
+
 ## What it does
 
 A Wemos D1 Mini with a Master OpenTherm Shield talks to the Brink unit and exposes the
