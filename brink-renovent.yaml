@@ -1,0 +1,77 @@
+# Reusable package for the Brink Renovent HR over OpenTherm.
+#
+# Consume from another machine (e.g. the ESPHome Builder) with:
+#
+#   packages:
+#     brink: github://sincze/esphome-brink-renovent-hr/brink-renovent.yaml@main
+#
+# Override any knob by defining the matching substitution BEFORE the package ref.
+# This package provides the board + component + entities; your device config still
+# supplies esphome.name, wifi, api, ota, logger.
+
+substitutions:
+  brink_in_pin: "4"
+  brink_out_pin: "5"
+  brink_max_volume: "296"
+  brink_ventilation_tolerance: "4"
+
+esp8266:
+  board: d1_mini
+
+external_components:
+  - source: github://sincze/esphome-brink-renovent-hr@main
+    components: [brink_hru]
+
+brink_hru:
+  id: brink
+  in_pin: ${brink_in_pin}
+  out_pin: ${brink_out_pin}
+  max_volume: ${brink_max_volume}
+  update_interval: 2s
+  ventilation_tolerance: ${brink_ventilation_tolerance}
+
+sensor:
+  - platform: brink_hru
+    brink_hru_id: brink
+    supply_temperature:
+      name: "Temperature from atmosphere"
+    exhaust_temperature:
+      name: "Temperature from indoors"
+    input_volume:
+      name: "Current input volume"
+    output_volume:
+      name: "Current output volume"
+    fan_level:
+      name: "Fan level"
+    pressure_input:
+      name: "Pressure input duct"
+    pressure_output:
+      name: "Pressure output duct"
+    bypass_status:
+      name: "Bypass status"
+    frost_status:
+      name: "Frost protection status"
+    fault_code:
+      name: "Fault code"
+    imbalance:
+      name: "Fixed imbalance"
+
+binary_sensor:
+  - platform: brink_hru
+    brink_hru_id: brink
+    fault:
+      name: "Fault indication"
+    filter_dirty:
+      name: "Filter dirty"
+    ventilation_mode:
+      name: "Ventilation mode"
+
+number:
+  - platform: brink_hru
+    brink_hru_id: brink
+    ventilation:
+      name: "Ventilation level"
+    minimum_atmospheric_temperature:
+      name: "Minimum atmospheric temperature bypass"
+    minimum_indoor_temperature:
+      name: "Minimum indoor temperature bypass"
